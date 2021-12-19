@@ -61,7 +61,7 @@ public class ApplicationContextExtendsFindTest {
         }
         //자바는 전부 object객체이므로 spring bean에 등록된 '모든'객체가 다 튀어나온다!
     }
-    
+
 
     @Configuration
     static class TestConfig{
