@@ -20,7 +20,7 @@ public class AutowiredTest {
     static class TestBean {
 
         //기본 인지 사항 : Member는 Spring bean이 아니다!!
-        
+
         //false로 하면, 자동 주입할 대상이 없으면 이 메서드 자체가 호출이 안된다! -> 디폴트는 true
         @Autowired(required = false)
         public void setNoBean1(Member noBean1) {
