@@ -43,7 +43,7 @@ public class MappingController {
      * 변수명이 같으면 생략 가능
      * @PathVariable("userId") String userId -> @PathVariable userId
      */
-    @GetMapping("/mapping/{userId}")
+    @GetMapping("/mapping-path/{userId}")
     public String mappingPath(@PathVariable("userId") String data) {
         log.info("mappingPath userId={}", data);
         return "ok";
