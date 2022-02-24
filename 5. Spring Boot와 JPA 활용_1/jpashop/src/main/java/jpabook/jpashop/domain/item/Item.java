@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-@Getter
+@Getter @Setter
 public abstract class Item {
 
     @Id @GeneratedValue
@@ -19,6 +19,7 @@ public abstract class Item {
     private Long id;
 
     private String name;
+    private int price;
     private int stockQuantity;
 
     @ManyToMany(mappedBy = "items")
