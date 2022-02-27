@@ -2,6 +2,7 @@ package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -56,5 +57,30 @@ public class OrderRepository {
         cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
         return query.getResultList();
+    }
+
+    // v3
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+    public List<Order> findAllWithItem() {
+        // jpa의 distinct는 order의 id가 똑같으면 제거 해준다!
+        // 즉, 원래 SQL의 distinct 기능 + 같은 엔티티가 조회되면 애플리케이션에서 중복 걸러줌!
+        // fetch join으로 중복 조회되는 것을 막아준다.
+        // (원래 sql의 distinct는 아예 한줄이 완전 똑같아야 제거됨)
+        // 1대다 이기떄문에 distinct 필요..
+        // 그러나 페이징이 불가능해진다..
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
     }
 }

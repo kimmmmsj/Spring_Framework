@@ -63,21 +63,29 @@ public class ItemController {
     }
 
     @PostMapping("items/{itemId}/edit")
-    public String updateItem(@PathVariable String itemId, @ModelAttribute("form") BookForm form) {
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
 
-        Book book = new Book();
-        book.setIsbn(form.getIsbn());
-        book.setId(form.getId());
-        book.setPrice(form.getPrice());
-        book.setName(form.getName());
-        book.setAuthor(form.getAuthor());
-        book.setStockQuantity(form.getStockQuantity());
+//        Book book = new Book();
+//        book.setIsbn(form.getIsbn());
+//        book.setId(form.getId());
+//        book.setPrice(form.getPrice());
+//        book.setName(form.getName());
+//        book.setAuthor(form.getAuthor());
+//        book.setStockQuantity(form.getStockQuantity());
+
         // 이 Book 객체는 이미 DB에 한번 저장되어서 나온거라 식별자가 존재한다. -> 즉, 준영속 엔티티!
         // READY -> CANCEL 같은거는 굳이 쿼리문 안날려도 영속 엔티티기 때문에 commit시점에 그냥 DB에 반영된다.
         // 그러나 이런것처럼 준영속 엔티티는 그냥 수정만 하면 DB에 반영 안된다...
 
+        // 그래서 타고 가보면 merge를 쓰는데 이거는 값이 안바뀌면 null이 들어가므로 지금은 merge를 쓰지만
+        // 실무에서는 영속 컨텍스트의 값을 변경하는 것(변경 감지 == dirdy checking)으로 해주자. -> merge 쓰지 말자!!
 
-        itemService.saveItem(book);
+        // 또한, 실무에서는 이렇게 set을 난무하면 안된다.
+        // ex) book.change(price, name, stockQuantity)처럼 의미있는 메서드를 만들어서 하자!
+        // 변수가 너무 많으면 dto를 만들면된다
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
+        //itemService.saveItem(book);
         return "redirect:/items";
     }
 
