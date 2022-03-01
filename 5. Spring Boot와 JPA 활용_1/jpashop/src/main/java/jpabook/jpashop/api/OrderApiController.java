@@ -10,8 +10,10 @@ import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,14 +70,12 @@ public class OrderApiController {
     public List<OrderDto> ordersV3_page(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
             @RequestParam(value = "limit", defaultValue = "100") int limit) {
-
-        List<Order> orders = orderRepository.findAllWithMemberDelivery();
-        // toOne인 delivery, member는 fetch join으로 가져오고 orderitem들은
-        // batch_size를 통해 가져오자!
-        List<OrderDto> collect = orders.stream()
+        List<Order> orders = orderRepository.findAllWithMemberDelivery(offset,
+                limit);
+        List<OrderDto> result = orders.stream()
                 .map(o -> new OrderDto(o))
                 .collect(toList());
-        return collect;
+        return result;
     }
 
     // 루트 1번 / 컬렉션 N번

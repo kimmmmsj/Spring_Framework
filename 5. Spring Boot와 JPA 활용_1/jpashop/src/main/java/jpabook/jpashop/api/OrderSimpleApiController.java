@@ -59,14 +59,13 @@ public class OrderSimpleApiController {
 
     // fetch join을 통해 한 번의 쿼리로 끝! 한번에 가져온다!!
     // 그러나 엔티티를 찍어서 조회를 한다는 단점.
-    //@GetMapping("/api/v3/simple-orders")
+    @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
 
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
         List<SimpleOrderDto> result = orders.stream()
                 .map(o -> new SimpleOrderDto(o))
                 .collect(Collectors.toList());
-
         return result;
     }
 
